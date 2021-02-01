@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="ViewModel"
+            type="com.example.minimoneybox.viewmodel.ProductDetailsViewModel" />
+
+        <variable
+            name="MoneyBoxUpdateCallback"
+            type="com.example.minimoneybox.network.Callback&lt;Double>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.ProductDetailsFragment">
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/moneybox_logo"
+            app:contentDescription="gvkvk"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorAccent"
+            android:padding="8dp"
+            android:text="@string/individual_account"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_logo" />
+
+        <LinearLayout
+            android:id="@+id/info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_title">
+
+            <TextView
+                android:id="@+id/txt_account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@{ViewModel.AccountName}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="Stocks and Shares ISA" />
+
+            <TextView
+                android:id="@+id/txtx_plan_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@{@string/product_item_plan_value(ViewModel.PlanValue)}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="Plan Value: £50" />
+
+            <TextView
+                android:id="@+id/txt_account_moneybox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@{@string/product_item_moneybox(ViewModel.MoneyBox)}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="Moneybox: £50" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add_10"
+            style="@style/Widget.Button.Colored.Rounded"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/add_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+                    android:onClick="@{view -> ViewModel.addToMoneybox(10, MoneyBoxUpdateCallback)}"
+            app:layout_constraintTop_toBottomOf="@+id/info_layout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
