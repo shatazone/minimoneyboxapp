@@ -18,7 +18,7 @@ android {
 
         buildConfigField "String", "BASE_URL", '"https://api-test01.moneyboxapp.com"'
         buildConfigField "String", "APP_ID", '"3a97b932a9d449c981b595"'
-        buildConfigField "String", "API_VERSION", '"7.15.0"'
+        buildConfigField "String", "API_VERSION", '"3.0.0"'
         buildConfigField "String", "TEST_USERNAME", '"jaeren+androidtest@moneyboxapp.com"'
         buildConfigField "String", "TEST_PASSWORD", '"P455word12"'
     }

@@ -48,9 +48,10 @@ public class ProductDetailsFragment extends Fragment {
         int productResponseId = ProductDetailsFragmentArgs.fromBundle(getArguments()).getProductResponseId();
         mBinding.getViewModel().loadProduct(productResponseId);
 
+        SavedStateHandle previousSavedState = Navigation.findNavController(getView()).getPreviousBackStackEntry().getSavedStateHandle();
+
         // Communicate back the changes to previous fragment
         mBinding.getViewModel().MoneyBox.observe(getViewLifecycleOwner(), moneyBox -> {
-            SavedStateHandle previousSavedState = Navigation.findNavController(getView()).getPreviousBackStackEntry().getSavedStateHandle();
             Bundle bundle = new Bundle();
             bundle.putInt(ARG_PRODUCT_RESPONSE_ID, productResponseId);
             bundle.putDouble(ARG_MONEYBOX, moneyBox);
