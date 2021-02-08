@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements MoneyBoxEventBroa
     }
 
     private void displaySessionExpiry(ErrorBody errorBody) {
-        navHostFragment.getNavController().popBackStack(R.id.loginFragment, false);
-
         String title = (errorBody == null) || (TextUtils.isEmpty(errorBody.getName())) ? getString(R.string.error_session_expired) : errorBody.getName();
         String message = (errorBody == null) || (TextUtils.isEmpty(errorBody.getMessage())) ? getString(R.string.error_login_again) : errorBody.getMessage();
 
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MoneyBoxEventBroa
     }
 
     private void navigateBackToLoginScreen() {
-        navHostFragment.getNavController().popBackStack(R.id.userAccountFragment, true);
+        navHostFragment.getNavController().popBackStack(R.id.nav_graph, true);
         navHostFragment.getNavController().navigate(R.id.loginFragment);
     }
 }
