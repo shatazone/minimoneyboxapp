@@ -16,21 +16,18 @@ import com.example.minimoneybox.network.data.ErrorBody;
 import com.example.minimoneybox.view.ErrorFragmentArgs;
 import com.example.minimoneybox.view.ui.MoneyBoxEventBroadcastReceiver;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoneyBoxEventBroadcastReceiver.Listener {
     private ActivityMainBinding mBinding;
 
     @Inject
     MoneyBoxManager mMoneyBoxManager;
 
-    private final BroadcastReceiver mBroadcastReceiver = createBroadcastReceiver(this);
-
+    private BroadcastReceiver mBroadcastReceiver;
     private NavHostFragment navHostFragment;
 
     @Override
@@ -39,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
 
+        mBroadcastReceiver = new MoneyBoxEventBroadcastReceiver(this);
         registerReceiver(mBroadcastReceiver, new IntentFilter(MoneyBoxEventBroadcastReceiver.ACTION_HANDLE_EVENT));
 
         int startDestId = mMoneyBoxManager.isLoggedIn() ? R.id.userAccountFragment : R.id.loginFragment;
@@ -60,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment.getNavController().setGraph(navGraph);
     }
 
-    private void logout() {
-        if(mMoneyBoxManager.isLoggedIn()) {
-            mMoneyBoxManager.logout();
-            navHostFragment.getNavController().popBackStack(R.id.userAccountFragment, true);
-            navHostFragment.getNavController().navigate(R.id.loginFragment);
-        }
+    @Override
+    public void onAuthTokenExpired(ErrorBody errorBody) {
+        mMoneyBoxManager.logout(false);
+        navigateBackToLoginScreen();
+        displaySessionExpiry(errorBody);
+    }
+
+    @Override
+    public void onLogout() {
+        navigateBackToLoginScreen();
     }
 
     private void displaySessionExpiry(ErrorBody errorBody) {
@@ -78,20 +80,8 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment.getNavController().navigate(R.id.errorFragment, args.toBundle());
     }
 
-    @NotNull
-    private static final MoneyBoxEventBroadcastReceiver createBroadcastReceiver(MainActivity mainActivity) {
-        return new MoneyBoxEventBroadcastReceiver() {
-
-            @Override
-            protected void onAuthTokenExpired(ErrorBody errorBody) {
-                mainActivity.logout();
-                mainActivity.displaySessionExpiry(errorBody);
-            }
-
-            @Override
-            protected void onLogout() {
-                mainActivity.logout();
-            }
-        };
+    private void navigateBackToLoginScreen() {
+        navHostFragment.getNavController().popBackStack(R.id.userAccountFragment, true);
+        navHostFragment.getNavController().navigate(R.id.loginFragment);
     }
 }

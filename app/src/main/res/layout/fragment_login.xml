@@ -9,11 +9,6 @@
         <variable
             name="ViewModel"
             type="com.example.minimoneybox.viewmodel.LoginViewModel" />
-
-        <variable
-            name="LoginCallback"
-            type="com.example.minimoneybox.network.Callback" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -123,7 +118,7 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/margin_default"
-            android:onClick="@{()->ViewModel.login(LoginCallback)}"
+            android:onClick="@{()->ViewModel.login()}"
             android:text="@string/action_sign_in"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

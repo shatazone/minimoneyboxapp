@@ -85,10 +85,13 @@ public class MoneyBoxManager {
         return repository.getUserLogin() != null;
     }
 
-    public void logout() {
+    public void logout(boolean broadcast) {
         if(isLoggedIn()) {
             repository.wipe();
-            MoneyBoxEventBroadcastReceiver.broadcastLogout(mContext);
+
+            if(broadcast) {
+                MoneyBoxEventBroadcastReceiver.broadcastLogout(mContext);
+            }
         }
     }
 }

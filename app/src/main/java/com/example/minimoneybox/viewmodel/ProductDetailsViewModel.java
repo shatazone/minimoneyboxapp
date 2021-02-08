@@ -4,9 +4,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.minimoneybox.MoneyBoxManager;
+import com.example.minimoneybox.view.ui.Request;
 import com.example.minimoneybox.model.data.ProductResponse;
 import com.example.minimoneybox.model.repository.Repository;
-import com.example.minimoneybox.network.Callback;
+import com.example.minimoneybox.network.data.NetworkResponse;
 
 import org.apache.commons.lang3.Validate;
 
@@ -22,6 +23,8 @@ public class ProductDetailsViewModel extends ViewModel {
     public final MutableLiveData<String> AccountName = new MutableLiveData<>();
     public final MutableLiveData<Double> PlanValue = new MutableLiveData<>();
     public final MutableLiveData<Double> MoneyBox = new MutableLiveData<>();
+
+    public final MutableLiveData<Request<NetworkResponse<?>>> AddMoneyBoxRequest = new MutableLiveData<>();
 
     private final Repository repository;
     private final MoneyBoxManager moneyBoxManager;
@@ -45,19 +48,19 @@ public class ProductDetailsViewModel extends ViewModel {
         MoneyBox.postValue(productResponse.getMoneybox());
     }
 
-    public synchronized void addToMoneybox(double amount, Callback<Double> callback) {
+    public synchronized void addToMoneybox(double amount) {
         Validate.notNull(productResponse, "Product is not loaded yet");
 
-        callback.onStarted();
+        AddMoneyBoxRequest.postValue(Request.loading());
         apiCallDisposer = moneyBoxManager.addOneOff(productResponse.getId(), amount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
+                .doOnNext(response -> {
                     if (response.isSuccessful()) {
                         MoneyBox.postValue(response.getBody());
                     }
-                    callback.onResponse(response);
-                }, throwable -> callback.onFailure(throwable));
+                })
+                .subscribe(response -> AddMoneyBoxRequest.postValue(Request.success(response)), throwable -> AddMoneyBoxRequest.postValue(Request.failed(throwable)));
     }
 
     @Override

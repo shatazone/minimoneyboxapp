@@ -8,15 +8,10 @@
 
         <import type="android.text.TextUtils" />
         <import type="android.view.View" />
-        <import type="com.example.minimoneybox.network.data.InvestorProductsResponse"/>
 
         <variable
             name="ViewModel"
             type="com.example.minimoneybox.viewmodel.UserAccountViewModel" />
-
-        <variable
-            name="InvestorProductsCallback"
-            type="com.example.minimoneybox.network.Callback&lt;InvestorProductsResponse>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +67,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintTop_toBottomOf="@+id/txt_welcome_message"
-            app:onRefreshListener="@{() -> ViewModel.refreshProductResponseList(InvestorProductsCallback)}">
+            app:onRefreshListener="@{() -> ViewModel.refreshProductResponseList()}">
 
             <FrameLayout
                 android:layout_width="match_parent"

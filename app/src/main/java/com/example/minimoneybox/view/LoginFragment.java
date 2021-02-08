@@ -15,11 +15,9 @@ import androidx.navigation.Navigation;
 import com.example.minimoneybox.R;
 import com.example.minimoneybox.databinding.FragmentLoginBinding;
 import com.example.minimoneybox.misc.Utils;
-import com.example.minimoneybox.network.Callback;
 import com.example.minimoneybox.network.data.NetworkResponse;
+import com.example.minimoneybox.view.ui.RequestObserver;
 import com.example.minimoneybox.viewmodel.LoginViewModel;
-
-import java.net.HttpURLConnection;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,13 +33,13 @@ public class LoginFragment extends Fragment {
         mBinding = FragmentLoginBinding.inflate(inflater, container, false);
         mBinding.setLifecycleOwner(this);
         mBinding.setViewModel(new ViewModelProvider(this).get(LoginViewModel.class));
-        mBinding.setLoginCallback(new LoginCallback());
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mNavController = Navigation.findNavController(getView());
+        mBinding.getViewModel().LoginResponse.observe(getViewLifecycleOwner(), new LoginRequestObserver());
     }
 
     private void displayError(String title, String message) {
@@ -62,25 +60,28 @@ public class LoginFragment extends Fragment {
         mNavController.popBackStack(R.id.loadingFragment, true);
     }
 
-    public class LoginCallback implements Callback {
+    private class LoginRequestObserver extends RequestObserver {
+
         @Override
-        public void onStarted() {
-            startLoading();
+        protected void updateLoader(boolean loading) {
+            if(loading) {
+                startLoading();
+            } else {
+                stopLoading();
+            }
         }
 
         @Override
-        public void onResponse(NetworkResponse response) {
-            stopLoading();
+        protected void onResponseReceived(NetworkResponse response) {
             if (response.isSuccessful()) {
                 displayUserAccounts();
-            } else if (response.getCode() != HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else {
                 displayError(response.getErrorBody().getName(), response.getErrorBody().getMessage());
             }
         }
 
         @Override
-        public void onFailure(Throwable throwable) {
-            stopLoading();
+        protected void onError(Throwable throwable) {
             displayError(Utils.getTitleFor(getContext(), throwable), Utils.getMessageFor(getContext(), throwable));
         }
     }

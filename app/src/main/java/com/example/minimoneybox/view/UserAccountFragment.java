@@ -19,14 +19,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import com.example.minimoneybox.databinding.FragmentUserAccountBinding;
 import com.example.minimoneybox.misc.Utils;
 import com.example.minimoneybox.model.data.ProductResponse;
-import com.example.minimoneybox.network.Callback;
-import com.example.minimoneybox.network.data.InvestorProductsResponse;
 import com.example.minimoneybox.network.data.NetworkResponse;
 import com.example.minimoneybox.view.ui.ProductListAdapter;
 import com.example.minimoneybox.view.ui.ProductViewHolder;
+import com.example.minimoneybox.view.ui.RequestObserver;
 import com.example.minimoneybox.viewmodel.UserAccountViewModel;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -43,7 +41,6 @@ public class UserAccountFragment extends Fragment {
         mBinding = FragmentUserAccountBinding.inflate(inflater, container, false);
         mBinding.setLifecycleOwner(this);
         mBinding.setViewModel(new ViewModelProvider(this).get(UserAccountViewModel.class));
-        mBinding.setInvestorProductsCallback(new InvestorProductCallback());
         return mBinding.getRoot();
     }
 
@@ -71,6 +68,8 @@ public class UserAccountFragment extends Fragment {
 
             onMoneyboxValueUpdated(productId, moneybox);
         });
+
+        mBinding.getViewModel().RefreshProductListResponse.observe(getViewLifecycleOwner(), new RefreshProductListRequestObserver());
     }
 
     // It is safe to update the UI only, since any change by API will automatically update the repository
@@ -103,24 +102,21 @@ public class UserAccountFragment extends Fragment {
         }
     }
 
-    public class InvestorProductCallback implements Callback<InvestorProductsResponse> {
+    private class RefreshProductListRequestObserver extends RequestObserver {
         @Override
-        public void onStarted() {
-            mBinding.swipeRefreshLayout.setRefreshing(true);
+        protected void updateLoader(boolean loading) {
+            mBinding.swipeRefreshLayout.setRefreshing(loading);
         }
 
         @Override
-        public void onResponse(NetworkResponse<InvestorProductsResponse> response) {
-            mBinding.swipeRefreshLayout.setRefreshing(false);
-
-            if (!response.isSuccessful() && response.getCode() != HttpURLConnection.HTTP_UNAUTHORIZED) {
+        protected void onResponseReceived(NetworkResponse response) {
+            if (!response.isSuccessful()) {
                 Toast.makeText(getContext(), response.getErrorBody().getMessage(), Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
-        public void onFailure(Throwable throwable) {
-            mBinding.swipeRefreshLayout.setRefreshing(false);
+        protected void onError(Throwable throwable) {
             Toast.makeText(getContext(), Utils.getMessageFor(getContext(), throwable), Toast.LENGTH_LONG).show();
         }
     }

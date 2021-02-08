@@ -17,11 +17,9 @@ import androidx.navigation.Navigation;
 import com.example.minimoneybox.R;
 import com.example.minimoneybox.databinding.FragmentProductDetailsBinding;
 import com.example.minimoneybox.misc.Utils;
-import com.example.minimoneybox.network.Callback;
 import com.example.minimoneybox.network.data.NetworkResponse;
+import com.example.minimoneybox.view.ui.RequestObserver;
 import com.example.minimoneybox.viewmodel.ProductDetailsViewModel;
-
-import java.net.HttpURLConnection;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -40,7 +38,6 @@ public class ProductDetailsFragment extends Fragment {
         mBinding = FragmentProductDetailsBinding.inflate(inflater, container, false);
         mBinding.setLifecycleOwner(this);
         mBinding.setViewModel(new ViewModelProvider(this).get(ProductDetailsViewModel.class));
-        mBinding.setMoneyBoxUpdateCallback(new MoneyBoxCallback());
         return mBinding.getRoot();
     }
 
@@ -60,10 +57,11 @@ public class ProductDetailsFragment extends Fragment {
 
             previousSavedState.set(KEY_MONEYBOX_UPDATED, bundle);
         });
+
+        mBinding.getViewModel().AddMoneyBoxRequest.observe(getViewLifecycleOwner(), new AddMoneyBoxRequestObserver());
     }
 
     private void displayError(String title, String message) {
-        mNavController.popBackStack(R.id.productDetailsFragment, false);
         ProductDetailsFragmentDirections.ActionAccountDetailsFragmentToAlertDialogFragment alertDialogFragment = ProductDetailsFragmentDirections.actionAccountDetailsFragmentToAlertDialogFragment(title, message);
         mNavController.navigate(alertDialogFragment);
     }
@@ -76,26 +74,28 @@ public class ProductDetailsFragment extends Fragment {
         mNavController.popBackStack(R.id.loadingFragment, true);
     }
 
-    public class MoneyBoxCallback implements Callback<Double> {
+    private class AddMoneyBoxRequestObserver extends RequestObserver {
+
         @Override
-        public void onStarted() {
-            startLoading();
+        protected void updateLoader(boolean loading) {
+            if(loading) {
+                startLoading();
+            } else {
+                stopLoading();
+            }
         }
 
         @Override
-        public void onResponse(NetworkResponse<Double> response) {
-            stopLoading();
-
+        protected void onResponseReceived(NetworkResponse response) {
             if (response.isSuccessful()) {
                 Toast.makeText(getActivity(), String.format(getString(R.string.pounds_were_added)), Toast.LENGTH_LONG).show();
-            } else if (response.getCode() != HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else {
                 displayError(response.getErrorBody().getName(), response.getErrorBody().getMessage());
             }
         }
 
         @Override
-        public void onFailure(Throwable throwable) {
-            stopLoading();
+        protected void onError(Throwable throwable) {
             displayError(Utils.getTitleFor(getContext(), throwable), Utils.getMessageFor(getContext(), throwable));
         }
     }

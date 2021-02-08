@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.minimoneybox.MoneyBoxManager;
+import com.example.minimoneybox.view.ui.Request;
 import com.example.minimoneybox.model.data.ProductResponse;
 import com.example.minimoneybox.model.repository.Repository;
-import com.example.minimoneybox.network.Callback;
-import com.example.minimoneybox.network.data.InvestorProductsResponse;
+import com.example.minimoneybox.network.data.NetworkResponse;
 
 import java.util.List;
 
@@ -23,6 +23,8 @@ public class UserAccountViewModel extends ViewModel {
     public final MutableLiveData<String> LoginFullName = new MutableLiveData<>();
     public final MutableLiveData<Double> TotalPlanValue = new MutableLiveData<>();
     public final MutableLiveData<List<ProductResponse>> ProductResponseList = new MutableLiveData<>();
+
+    public final MutableLiveData<Request<NetworkResponse<?>>> RefreshProductListResponse = new MutableLiveData<>();
 
     private final Repository repository;
     private final MoneyBoxManager moneyBoxManager;
@@ -47,13 +49,13 @@ public class UserAccountViewModel extends ViewModel {
         ProductResponseList.postValue(productResponses);
     }
 
-    public synchronized void refreshProductResponseList(Callback<InvestorProductsResponse> callback) {
-        callback.onStarted();
+    public synchronized void refreshProductResponseList() {
+        RefreshProductListResponse.postValue(Request.loading());
 
         apiCallDisposer = moneyBoxManager.getInvestorProducts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> callback.onResponse(response), throwable -> callback.onFailure(throwable));
+                .subscribe(response -> RefreshProductListResponse.postValue(Request.success(response)), throwable -> RefreshProductListResponse.postValue(Request.failed(throwable)));
     }
 
     public void rebuildProductResultList() {

@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.minimoneybox.BuildConfig;
 import com.example.minimoneybox.MoneyBoxManager;
 import com.example.minimoneybox.R;
-import com.example.minimoneybox.network.Callback;
+import com.example.minimoneybox.view.ui.Request;
+import com.example.minimoneybox.network.data.NetworkResponse;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,8 @@ public class LoginViewModel extends ViewModel {
     public final ObservableField<String> PasswordError = new ObservableField();
     public final ObservableField<String> DisplayNameError = new ObservableField();
 
+    public final MutableLiveData<Request<NetworkResponse>> LoginResponse = new MutableLiveData<>();
+
     private final Context mContext;
     private final MoneyBoxManager mMoneyBoxManager;
     private Disposable mApiDisposer;
@@ -49,17 +52,17 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public synchronized boolean login(Callback callback) {
+    public synchronized boolean login() {
         if (!validateForm()) {
             return false;
         }
 
-        callback.onStarted();;
+        LoginResponse.postValue(Request.loading());
 
         mApiDisposer = mMoneyBoxManager.login(EmailAddress.getValue(), Password.getValue(), DisplayName.getValue())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> callback.onResponse(response), throwable -> callback.onFailure(throwable));
+                .subscribe(response -> LoginResponse.postValue(Request.success(response)), throwable -> LoginResponse.postValue(Request.failed(throwable)));
 
         return true;
     }

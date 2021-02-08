@@ -1,7 +1,7 @@
 package com.example.minimoneybox.network.impl.retrofit.interceptor;
 
-import com.example.minimoneybox.network.AuthTokenSupplier;
 import com.example.minimoneybox.network.AuthTokenExpiredConsumer;
+import com.example.minimoneybox.network.AuthTokenSupplier;
 import com.example.minimoneybox.network.data.ErrorBody;
 import com.example.minimoneybox.network.impl.retrofit.ResponseAdapter;
 
@@ -37,7 +37,7 @@ public class AuthInterceptor implements Interceptor {
         Response response = chain.proceed(request);
 
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            ErrorBody errorBody = responseAdapter.adapt(response.body());
+            ErrorBody errorBody = responseAdapter.adapt(response.peekBody(2048));
             authTokenExpiredConsumer.accept(errorBody);
         }
 
