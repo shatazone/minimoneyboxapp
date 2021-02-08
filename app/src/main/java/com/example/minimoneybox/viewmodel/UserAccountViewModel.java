@@ -62,6 +62,10 @@ public class UserAccountViewModel extends ViewModel {
         ProductResponseList.postValue(repository.getInvestorProducts().getProductResponses());
     }
 
+    public void logout() {
+        moneyBoxManager.logout(true);
+    }
+    
     @Override
     protected void onCleared() {
         super.onCleared();

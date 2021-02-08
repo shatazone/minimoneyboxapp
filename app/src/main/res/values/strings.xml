@@ -32,4 +32,5 @@
     <string name="error_login_again">Please login again</string>
     <string name="lorem_ipsim">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
     <string name="pounds_were_added">£10 pounds were added successfully!</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
