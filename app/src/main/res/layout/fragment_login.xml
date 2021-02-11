@@ -34,7 +34,7 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            app:error="@{ViewModel.EmailAddressError}"
+            app:error="@{ViewModel.getLoginForm().EmailAddressError}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_logo">
@@ -43,12 +43,11 @@
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validateEmail()}"
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="@={ViewModel.EmailAddress}" />
+                android:text="@={ViewModel.getLoginForm().EmailAddress}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,20 +58,19 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            app:error="@{ViewModel.PasswordError}"
+            app:error="@{ViewModel.getLoginForm().PasswordError}"
             app:layout_constraintTop_toBottomOf="@+id/til_email">
 
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validatePassword()}"
                 android:hint="@string/prompt_password"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="@={ViewModel.Password}" />
+                android:text="@={ViewModel.getLoginForm().Password}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,19 +81,18 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/margin_default"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            app:error="@{ViewModel.DisplayNameError}"
+            app:error="@{ViewModel.getLoginForm().DisplayNameError}"
             app:layout_constraintTop_toBottomOf="@+id/til_password">
 
             <EditText
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validateDisplayName()}"
                 android:hint="@string/prompt_full_name"
                 android:inputType="textPersonName"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="@={ViewModel.DisplayName}" />
+                android:text="@={ViewModel.getLoginForm().DisplayName}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

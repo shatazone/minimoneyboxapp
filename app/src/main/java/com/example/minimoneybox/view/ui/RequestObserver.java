@@ -17,10 +17,10 @@ public abstract class RequestObserver<T> implements Observer<Request<NetworkResp
                 break;
 
             case SUCCESS:
+                updateLoader(false);
                 if(request.getResponse().getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                    onUnAuthorizedRequest();
+                    onUnAuthorizedRequest(request.getResponse());
                 } else {
-                    updateLoader(false);
                     onResponseReceived(request.getResponse());
                 }
                 break;
@@ -37,7 +37,7 @@ public abstract class RequestObserver<T> implements Observer<Request<NetworkResp
     protected abstract void onResponseReceived(NetworkResponse<T> response);
     protected abstract void onError(Throwable throwable);
 
-    protected void onUnAuthorizedRequest() {
+    protected void onUnAuthorizedRequest(NetworkResponse<T> response) {
         // ignored because the main activity should be handling it
     }
 }
