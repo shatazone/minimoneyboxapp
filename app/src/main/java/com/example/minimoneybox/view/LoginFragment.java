@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -15,7 +16,9 @@ import androidx.navigation.Navigation;
 import com.example.minimoneybox.R;
 import com.example.minimoneybox.databinding.FragmentLoginBinding;
 import com.example.minimoneybox.misc.Utils;
+import com.example.minimoneybox.network.data.InvestorProductsResponse;
 import com.example.minimoneybox.network.data.NetworkResponse;
+import com.example.minimoneybox.network.data.UserLoginResponse;
 import com.example.minimoneybox.view.ui.RequestObserver;
 import com.example.minimoneybox.viewmodel.LoginViewModel;
 
@@ -60,7 +63,7 @@ public class LoginFragment extends Fragment {
         mNavController.popBackStack(R.id.loadingFragment, true);
     }
 
-    private class LoginRequestObserver extends RequestObserver {
+    private class LoginRequestObserver extends RequestObserver<Pair<UserLoginResponse, InvestorProductsResponse>> {
 
         @Override
         protected void updateLoader(boolean loading) {
@@ -72,17 +75,22 @@ public class LoginFragment extends Fragment {
         }
 
         @Override
-        protected void onResponseReceived(NetworkResponse response) {
+        protected void onResponseReceived(NetworkResponse<Pair<UserLoginResponse, InvestorProductsResponse>> response) {
             if (response.isSuccessful()) {
                 displayUserAccounts();
             } else {
-                displayError(response.getErrorBody().getName(), response.getErrorBody().getMessage());
+                displayError(Utils.getTitleFor(response.getErrorBody()), Utils.getMessageFor(response.getErrorBody()));
             }
         }
 
         @Override
         protected void onError(Throwable throwable) {
             displayError(Utils.getTitleFor(getContext(), throwable), Utils.getMessageFor(getContext(), throwable));
+        }
+
+        @Override
+        protected void onUnAuthorizedRequest(NetworkResponse response) {
+            displayError(Utils.getTitleFor(response.getErrorBody()), Utils.getMessageFor(response.getErrorBody()));
         }
     }
 }

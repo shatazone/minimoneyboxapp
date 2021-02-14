@@ -21,6 +21,7 @@ import dagger.hilt.components.SingletonComponent;
 @Module
 @InstallIn(SingletonComponent.class)
 public class MainModule {
+
     @Singleton
     @Provides
     public static MoneyBoxManager provideMoneyManager(@ApplicationContext Context context, HttpClient httpClient, Repository repository) {

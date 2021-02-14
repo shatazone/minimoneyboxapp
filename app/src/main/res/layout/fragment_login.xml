@@ -43,10 +43,10 @@
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validateEmail()}"
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
+                android:onFocusChange="@{(view, focus) -> ViewModel.validateEmail(focus)}"
                 android:singleLine="true"
                 android:text="@={ViewModel.EmailAddress}" />
 
@@ -66,11 +66,11 @@
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validatePassword()}"
                 android:hint="@string/prompt_password"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:inputType="textPassword"
                 android:maxLines="1"
+                android:onFocusChange="@{(view, focus) -> ViewModel.validatePassword(focus)}"
                 android:singleLine="true"
                 android:text="@={ViewModel.Password}" />
 
@@ -90,10 +90,10 @@
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{()->ViewModel.validateDisplayName()}"
                 android:hint="@string/prompt_full_name"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:onFocusChange="@{(view, focus) -> ViewModel.validateDisplayName(focus)}"
                 android:singleLine="true"
                 android:text="@={ViewModel.DisplayName}" />
 
