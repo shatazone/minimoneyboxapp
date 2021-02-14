@@ -75,10 +75,10 @@ public class LoginViewModelTest {
         viewModel.Password.setValue(password);
         viewModel.DisplayName.setValue(displayName);
 
-        viewModel.validateEmail();
-        viewModel.validatePassword();
-        viewModel.validateDisplayName();
+        viewModel.validateEmail(false);
+        viewModel.validatePassword(false);
+        viewModel.validateDisplayName(false);
 
-        return viewModel.validateForm();
+        return viewModel.validate();
     }
 }
