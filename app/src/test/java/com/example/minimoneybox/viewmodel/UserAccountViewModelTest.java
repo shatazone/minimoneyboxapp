@@ -51,7 +51,7 @@ public class UserAccountViewModelTest {
 
     @Test
     public void testDataFilledCorrectly() throws InterruptedException {
-        viewModel.fillValues(DISPLAY_NAME, INVESTOR_PRODUCTS.getTotalPlanValue(), INVESTOR_PRODUCTS.getProductResponses());
+        viewModel.loadFromRepository();
         TestObserver.test(viewModel.LoginFullName).awaitValue().assertValue(DISPLAY_NAME);
         TestObserver.test(viewModel.TotalPlanValue).awaitValue().assertValue(INVESTOR_PRODUCTS.getTotalPlanValue());
         TestObserver.test(viewModel.ProductResponseList).awaitValue().assertValue(INVESTOR_PRODUCTS.getProductResponses());

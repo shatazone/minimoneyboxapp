@@ -9,7 +9,7 @@
         android:id="@+id/loginFragment"
         android:name="com.example.minimoneybox.view.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/displayLoadingDialog"
             app:destination="@id/loadingFragment" />
@@ -24,27 +24,22 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/slide_out_right"/>
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/userAccountFragment"
         android:name="com.example.minimoneybox.view.UserAccountFragment"
         android:label="user_accounts_fragment"
-        tools:layout="@layout/fragment_user_account" >
+        tools:layout="@layout/fragment_user_account">
         <action
             android:id="@+id/startAccountDetails"
-            app:destination="@id/productDetailsFragment">
-            <argument
-                android:name="productResponseId"
-                android:defaultValue="-1"
-                app:argType="integer" />
-        </action>
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="com.example.minimoneybox.view.ProductDetailsFragment"
         android:label="individual_account_fragment"
-        tools:layout="@layout/fragment_product_details" >
+        tools:layout="@layout/fragment_product_details">
         <argument
             android:name="productResponseId"
             app:argType="integer" />
@@ -71,8 +66,7 @@
         android:id="@+id/loadingFragment"
         android:name="com.example.minimoneybox.view.LoadingFragment"
         android:label="fragment_loading"
-        tools:layout="@layout/fragment_loading" >
-    </dialog>
+        tools:layout="@layout/fragment_loading"></dialog>
     <dialog
         android:id="@+id/alertDialogFragment"
         android:name="com.example.minimoneybox.view.AlertDialogFragment"

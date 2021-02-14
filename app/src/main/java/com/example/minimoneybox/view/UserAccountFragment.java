@@ -9,13 +9,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import com.example.minimoneybox.R;
 import com.example.minimoneybox.databinding.FragmentUserAccountBinding;
 import com.example.minimoneybox.misc.Utils;
 import com.example.minimoneybox.model.data.ProductResponse;
@@ -40,7 +38,7 @@ public class UserAccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mBinding = FragmentUserAccountBinding.inflate(inflater, container, false);
         mBinding.setLifecycleOwner(this);
-        mBinding.setViewModel(new ViewModelProvider(this).get(UserAccountViewModel.class));
+        mBinding.setViewModel(new ViewModelProvider(requireActivity()).get(UserAccountViewModel.class));
         return mBinding.getRoot();
     }
 
@@ -49,7 +47,7 @@ public class UserAccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAdapter = new ProductListAdapter();
-        mAdapter.setOnClickListener(this::openProductDetails);
+        mAdapter.setOnClickListener(this::selectProduct);
         mAdapter.setHasStableIds(true);
 
         mBinding.recyclerView.setHasFixedSize(true);
@@ -57,37 +55,16 @@ public class UserAccountFragment extends Fragment {
         mBinding.recyclerView.setAdapter(mAdapter);
 
         mBinding.getViewModel().ProductResponseList.observe(getActivity(), this::updateProductList);
-
-        // Observe moneyvalue returned theoretically from AccountDetailsFragment, and update the whole products list.
-        NavController navController = Navigation.findNavController(getView());
-        SavedStateHandle savedStateHandle = navController.getCurrentBackStackEntry().getSavedStateHandle();
-        MutableLiveData<Bundle> liveData = savedStateHandle.getLiveData(ProductDetailsFragment.KEY_MONEYBOX_UPDATED);
-        liveData.observe(getViewLifecycleOwner(), bundle -> {
-            int productId = bundle.getInt(ProductDetailsFragment.ARG_PRODUCT_RESPONSE_ID);
-            double moneybox = bundle.getDouble(ProductDetailsFragment.ARG_MONEYBOX);
-
-            onMoneyboxValueUpdated(productId, moneybox);
-        });
-
+        mBinding.getViewModel().SelectedProduct.observe(getViewLifecycleOwner(), productResponseModel -> Navigation.findNavController(getView()).navigate(R.id.productDetailsFragment));
         mBinding.getViewModel().RefreshProductListResponse.observe(getViewLifecycleOwner(), new RefreshProductListRequestObserver());
     }
 
-    // It is safe to update the UI only, since any change by API will automatically update the repository
-    // TODO find a way to update the view model as well... it is now inconsistent
-    private void onMoneyboxValueUpdated(int productId, double moneybox) {
-        ProductResponse productResponse = mAdapter.getItemById(productId);
-        productResponse.setMoneybox(moneybox);
-        int position = mAdapter.findPositionOf(productResponse);
-        mAdapter.notifyItemChanged(position);
-    }
-
-    private void openProductDetails(View v) {
+    private void selectProduct(View v) {
         ProductViewHolder holder = (ProductViewHolder) v.getTag();
         int adapterPosition = holder.getAdapterPosition();
         ProductResponse productResponse = mAdapter.getCurrentList().get(adapterPosition);
 
-        UserAccountFragmentDirections.StartAccountDetails startAccountDetails = UserAccountFragmentDirections.startAccountDetails().setProductResponseId(productResponse.getId());
-        Navigation.findNavController(getView()).navigate(startAccountDetails);
+        mBinding.getViewModel().selectProduct(productResponse.getId());
     }
 
     private void updateProductList(List<ProductResponse> productResponses) {

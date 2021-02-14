@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="ViewModel"
-            type="com.example.minimoneybox.viewmodel.ProductDetailsViewModel" />
+            type="com.example.minimoneybox.viewmodel.UserAccountViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@{ViewModel.AccountName}"
+                android:text="@{ViewModel.SelectedProduct.AccountName}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="Stocks and Shares ISA" />
 
@@ -65,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@{@string/product_item_plan_value(ViewModel.PlanValue)}"
+                android:text="@{@string/product_item_plan_value(ViewModel.SelectedProduct.PlanValue)}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="Plan Value: £50" />
 
@@ -74,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@{@string/product_item_moneybox(ViewModel.MoneyBox)}"
+                android:text="@{@string/product_item_moneybox(ViewModel.SelectedProduct.MoneyBox)}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="Moneybox: £50" />
         </LinearLayout>
@@ -85,11 +86,11 @@
             android:layout_width="160dp"
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
+            android:onClick="@{view -> ViewModel.addToMoneybox(10)}"
             android:text="@string/add_10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-                    android:onClick="@{view -> ViewModel.addToMoneybox(10)}"
             app:layout_constraintTop_toBottomOf="@+id/info_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

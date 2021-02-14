@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,16 +18,12 @@ import com.example.minimoneybox.databinding.FragmentProductDetailsBinding;
 import com.example.minimoneybox.misc.Utils;
 import com.example.minimoneybox.network.data.NetworkResponse;
 import com.example.minimoneybox.view.ui.RequestObserver;
-import com.example.minimoneybox.viewmodel.ProductDetailsViewModel;
+import com.example.minimoneybox.viewmodel.UserAccountViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ProductDetailsFragment extends Fragment {
-    public static final String KEY_MONEYBOX_UPDATED = "moneyboxUpdated";
-    public static final String ARG_PRODUCT_RESPONSE_ID = "product_response_id";
-    public static final String ARG_MONEYBOX = "moneybox";
-
     private FragmentProductDetailsBinding mBinding;
     private NavController mNavController;
 
@@ -37,28 +32,13 @@ public class ProductDetailsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mBinding = FragmentProductDetailsBinding.inflate(inflater, container, false);
         mBinding.setLifecycleOwner(this);
-        mBinding.setViewModel(new ViewModelProvider(this).get(ProductDetailsViewModel.class));
+        mBinding.setViewModel(new ViewModelProvider(requireActivity()).get(UserAccountViewModel.class));
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mNavController = Navigation.findNavController(getView());
-
-        int productResponseId = ProductDetailsFragmentArgs.fromBundle(getArguments()).getProductResponseId();
-        mBinding.getViewModel().loadProduct(productResponseId);
-
-        SavedStateHandle previousSavedState = Navigation.findNavController(getView()).getPreviousBackStackEntry().getSavedStateHandle();
-
-        // Communicate back the changes to previous fragment
-        mBinding.getViewModel().MoneyBox.observe(getViewLifecycleOwner(), moneyBox -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt(ARG_PRODUCT_RESPONSE_ID, productResponseId);
-            bundle.putDouble(ARG_MONEYBOX, moneyBox);
-
-            previousSavedState.set(KEY_MONEYBOX_UPDATED, bundle);
-        });
-
         mBinding.getViewModel().AddMoneyBoxRequest.observe(getViewLifecycleOwner(), new AddMoneyBoxRequestObserver());
     }
 
