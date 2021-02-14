@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="productResponse"
+            type="com.example.minimoneybox.model.data.ProductResponse" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/imageView2"-->
+            <!--                android:layout_width="62dp"-->
+            <!--                android:layout_height="63dp"-->
+            <!--                card_view:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                card_view:layout_constraintEnd_toEndOf="parent"-->
+            <!--                card_view:layout_constraintTop_toTopOf="parent"-->
+            <!--                card_view:srcCompat="@drawable/ic_baseline_chevron_right_24"-->
+            <!--                android:focusable="false" />-->
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{productResponse.getProduct().getFriendlyName()}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="Stocks and Shares ISA" />
+
+            <TextView
+                android:id="@+id/txt_plan_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{@string/product_item_plan_value(productResponse.getPlanValue().toString())}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/txt_title"
+                tools:text="Plan Value: £2000" />
+
+            <TextView
+                android:id="@+id/txt_moneybox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@{@string/product_item_moneybox(productResponse.getMoneybox().toString())}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/txt_plan_value"
+                tools:text="Moneybox: £2000" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
