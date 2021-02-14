@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">MiniMoneybox</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_full_name">Full Name (optional)</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="email_address_error">Please enter a correct email address</string>
+    <string name="password_error">Please enter a correct password</string>
+    <string name="full_name_error">Please enter your full name</string>
+    <string name="input_valid">Input is valid!</string>
+    <string name="ok">OK</string>
+    <string name="error_generic">Something went wrong!</string>
+    <string name="error_check_connection">Check your connection</string>
+    <string name="error_session_expired">Session has expired</string>
+    <string name="lottie_owl_coin_shower">owl_coin_shower.json</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="welcome_message">Welcome %1$s</string>
+    <string name="user_accounts">User Accounts</string>
+
+    <string name="total_plan_value">Total Plan Value £%1$s</string>
+    <string name="product_item_plan_value">Plan Value: £%1$s</string>
+    <string name="product_item_moneybox">Moneybox: £%1$s</string>
+    <string name="individual_account">Individual Account</string>
+    <string name="add_10">Add £10</string>
+    <string name="moneybox_updated">Moneybox has been updated</string>
+    <string name="account_list_is_empty">Account list is empty</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="field_is_mandatory">This field is mandatory</string>
+    <string name="error_login_again">Please login again</string>
+    <string name="lorem_ipsim">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+    <string name="pounds_were_added">£10 pounds were added successfully!</string>
+    <string name="sign_out">Sign Out</string>
+</resources>
