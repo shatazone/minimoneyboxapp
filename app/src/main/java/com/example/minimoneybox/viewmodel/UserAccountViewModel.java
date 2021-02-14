@@ -35,18 +35,7 @@ public class UserAccountViewModel extends ViewModel {
         this.moneyBoxManager = moneyBoxManager;
         this.repository = repository;
 
-        // TODO this viewModel is tightly coupled with repository, perhaps we can insert some dynamic data provider instead of repository?
-        fillValues(repository);
-    }
-
-    public void fillValues(Repository repository) {
-        fillValues(repository.getLoginFullName(), repository.getInvestorProducts().getTotalPlanValue(), repository.getInvestorProducts().getProductResponses());
-    }
-
-    public void fillValues(String displayName, Double totalPlanValue, List<ProductResponse> productResponses) {
-        LoginFullName.postValue(displayName);
-        TotalPlanValue.postValue(totalPlanValue);
-        ProductResponseList.postValue(productResponses);
+        loadFromRepository();
     }
 
     public synchronized void refreshProductResponseList() {
@@ -58,14 +47,10 @@ public class UserAccountViewModel extends ViewModel {
                 .subscribe(response -> RefreshProductListResponse.postValue(Request.success(response)), throwable -> RefreshProductListResponse.postValue(Request.failed(throwable)));
     }
 
-    public void rebuildProductResultList() {
-        ProductResponseList.postValue(repository.getInvestorProducts().getProductResponses());
-    }
-
     public void logout() {
         moneyBoxManager.logout(true);
     }
-    
+
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -73,5 +58,15 @@ public class UserAccountViewModel extends ViewModel {
         if(apiCallDisposer != null && !apiCallDisposer.isDisposed()) {
             apiCallDisposer.dispose();
         }
+    }
+
+    void loadFromRepository() {
+        LoginFullName.postValue(repository.getLoginFullName());
+        TotalPlanValue.postValue(repository.getInvestorProducts().getTotalPlanValue());
+        ProductResponseList.postValue(repository.getInvestorProducts().getProductResponses());
+    }
+
+    void rebuildProductResultList() {
+        ProductResponseList.postValue(repository.getInvestorProducts().getProductResponses());
     }
 }
